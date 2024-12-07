@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSolvers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-blue: #0A192F;
+            --neon-blue: #00E1FF;
+            --accent-purple: #6A5ACD;
+            --text-white: #E6E6FA;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, var(--deep-blue), #0C2342);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1500px;
+        }
+
+        .background-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 20px;
+            padding: 50px;
+            width: 100%;
+            max-width: 900px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(0, 225, 255, 0.2);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 100px rgba(0, 225, 255, 0.1);
+            transform: rotateX(10deg) rotateY(-10deg);
+            transition: all 0.5s ease;
+        }
+
+        .container:hover {
+            transform: rotateX(0) rotateY(0) scale(1.02);
+            box-shadow: 
+                0 35px 70px rgba(0, 0, 0, 0.4),
+                0 0 150px rgba(0, 225, 255, 0.2);
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 4rem;
+            text-align: center;
+            background: linear-gradient(
+                45deg, 
+                var(--neon-blue), 
+                var(--accent-purple)
+            );
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 40px;
+            text-shadow: 
+                0 0 20px rgba(0, 225, 255, 0.4),
+                0 0 40px rgba(106, 90, 205, 0.3);
+            animation: logo-pulse 3s infinite alternate;
+        }
+
+        @keyframes logo-pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(0, 225, 255, 0.05);
+            border: 2px solid rgba(0, 225, 255, 0.2);
+            border-radius: 15px;
+            color: var(--text-white);
+            font-size: 18px;
+            outline: none;
+            transition: all 0.4s ease;
+        }
+
+        .search-box:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 
+                0 0 20px rgba(0, 225, 255, 0.2),
+                0 0 10px rgba(0, 225, 255, 0.1) inset;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(
+                135deg, 
+                var(--neon-blue), 
+                var(--accent-purple)
+            );
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s ease;
+        }
+
+        .search-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 
+                0 10px 20px rgba(0, 225, 255, 0.3),
+                0 0 30px rgba(106, 90, 205, 0.2);
+        }
+
+        #resultado {
+            background: rgba(0, 225, 255, 0.05);
+            border: 2px solid rgba(0, 225, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px rgba(0, 225, 255, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(0, 225, 255, 0.4); }
+            100% { box-shadow: 0 0 10px rgba(0, 225, 255, 0.2); }
+        }
+
+        .loading {
+            animation: glow 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 30px;
+            }
+
+            .logo {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-particles" id="particles"></div>
+    <div class="container">
+        <h1 class="logo">TECHSOLVERS</h1>
+        
+        <div class="search-container">
+            <input type="text" id="erro" class="search-box" placeholder="Descreva o problema do seu computador..." required>
+            <button class="search-button" onclick="enviarErro()">
+                <i class="fas fa-search"></i> Pesquisar
+            </button>
+        </div>
+
+        <div id="resultado"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tsparticles/2.3.4/tsparticles.min.js"></script>
+    <script>
+        
+        tsParticles.load("particles", {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: "#00E1FF" },
+                shape: { type: "circle" },
+                opacity: { 
+                    value: 0.3, 
+                    random: false, 
+                    anim: { enable: false } 
+                },
+                size: { 
+                    value: 3, 
+                    random: true, 
+                    anim: { 
+                        enable: false, 
+                        speed: 40, 
+                        size_min: 0.1 
+                    } 
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#00E1FF",
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: "none",
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: false, mode: "push" },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        async function enviarErro() {
+            const erro = document.getElementById('erro').value;
+            const resultadoDiv = document.getElementById('resultado');
+
+            if (erro) {
+                resultadoDiv.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--neon-blue);"></i>
+                        <p style="margin-top: 15px;">Diagnosticando seu problema...</p>
+                    </div>
+                `;
+                
+                try {
+                    const response = await fetch('http://localhost:5000/diagnostico', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ query: erro })
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        resultadoDiv.innerHTML = `
+                            <div>
+                                <i class="fas fa-check-circle fa-3x" style="color: var(--neon-blue); margin-bottom: 15px;"></i>
+                                <p><strong>Diagnóstico:</strong> ${data.diagnostico}</p>
+                            </div>
+                        `;
+                    } else {
+                        resultadoDiv.innerHTML = `
+                            <div>
+                                <i class="fas fa-exclamation-triangle fa-3x" style="color: #FF4D4D; margin-bottom: 15px;"></i>
+                                <p><strong>Erro:</strong> ${data.diagnostico}</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    resultadoDiv.innerHTML = `
+                        <div>
+                            <i class="fas fa-times-circle fa-3x" style="color: #FF4D4D; margin-bottom: 15px;"></i>
+                            <p><strong>Erro de Conexão:</strong> Não foi possível se conectar ao servidor.</p>
+                        </div>
+                    `;
+                }
+            } else {
+                resultadoDiv.innerHTML = `
+                    <div>
+                        <i class="fas fa-info-circle fa-3x" style="color: #FFA500; margin-bottom: 15px;"></i>
+                        <p><strong>Aviso:</strong> Por favor, insira uma descrição de erro.</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
